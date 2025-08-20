@@ -1402,7 +1402,7 @@ def vit_base_patch16_224_sup1k(pretrained=False, **kwargs):
         patch_size=16, embed_dim=768, depth=12, num_heads=12, **kwargs)
     model = _create_vision_transformer('vit_base_patch16_224_in21k', pretrained=False, **model_kwargs)
     #load Sup1k checkpoint
-    ckpt = torch.load('./checkpoints/sup1k_vitbase16_pretrain.pth', map_location='cpu')
+    ckpt = torch.load('./checkpoints/pytorch_model.bin', map_location='cpu')
     state_dict = model.state_dict()
     state_dict.update(ckpt)
     model.load_state_dict(state_dict)
