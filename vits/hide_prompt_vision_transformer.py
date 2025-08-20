@@ -162,10 +162,10 @@ default_cfgs = {
         url='https://dl.fbaipublicfiles.com/dino/dino_vitbase8_pretrain/dino_vitbase8_pretrain.pth',
         mean=IMAGENET_DEFAULT_MEAN, std=IMAGENET_DEFAULT_STD, num_classes=0),
 
-    # Sup1K pretrained
-    #'vit_base_patch16_224_sup1k': _cfg(
-    #    url='https://huggingface.co/timm/vit_base_patch16_224.augreg2_in21k_ft_in1k/blob/main/pytorch_model.bin',
-    #    mean=IMAGENET_DEFAULT_MEAN, std=IMAGENET_DEFAULT_STD, num_classes=1000,),
+     #Sup1K pretrained
+    'vit_base_patch16_224_sup1k': _cfg(
+        url='https://huggingface.co/timm/vit_base_patch16_224.augreg2_in21k_ft_in1k/resolve/main/pytorch_model.bin',
+        mean=IMAGENET_DEFAULT_MEAN, std=IMAGENET_DEFAULT_STD, num_classes=1000,),
 
 
 
@@ -1402,7 +1402,7 @@ def vit_base_patch16_224_sup1k(pretrained=False, **kwargs):
         patch_size=16, embed_dim=768, depth=12, num_heads=12, **kwargs)
     model = _create_vision_transformer('vit_base_patch16_224_in21k', pretrained=False, **model_kwargs)
     #load Sup1k checkpoint
-    ckpt = torch.load('./checkpoints/pytorch_model.bin', map_location='cpu')
+    ckpt = torch.load('./checkpoints/pytorch_model.bin', map_location='cpu', weights_only=False)
     state_dict = model.state_dict()
     state_dict.update(ckpt)
     model.load_state_dict(state_dict)
