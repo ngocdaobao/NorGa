@@ -162,6 +162,13 @@ default_cfgs = {
         url='https://dl.fbaipublicfiles.com/dino/dino_vitbase8_pretrain/dino_vitbase8_pretrain.pth',
         mean=IMAGENET_DEFAULT_MEAN, std=IMAGENET_DEFAULT_STD, num_classes=0),
 
+    # Sup1K pretrained
+    'vit_base_patch16_224_sup1k': _cfg(
+        url='https://huggingface.co/timm/vit_base_patch16_224.augreg2_in21k_ft_in1k/blob/main/pytorch_model.bin',
+        mean=IMAGENET_DEFAULT_MEAN, std=IMAGENET_DEFAULT_STD, num_classes=1000,),
+
+
+
     # ViT ImageNet-21K-P pretraining by MILL
     'vit_base_patch16_224_miil_in21k': _cfg(
         url='https://miil-public-eu.oss-eu-central-1.aliyuncs.com/model-zoo/ImageNet_21K_P/models/timm/vit_base_patch16_224_in21k_miil.pth',
@@ -1388,6 +1395,20 @@ def vit_base_patch16_224_21k_ibot(pretrained=False, **kwargs):
     # model.norm = nn.LayerNorm(768)
     return model
 
+# add sup1k
+@register_model
+def vit_base_patch16_224_sup1k(pretrained=False, **kwargs):
+    model_kwargs = dict(
+        patch_size=16, embed_dim=768, depth=12, num_heads=12, **kwargs)
+    model = _create_vision_transformer('vit_base_patch16_224_in21k', pretrained=False, **model_kwargs)
+    #load Sup1k checkpoint
+    ckpt = torch.load('./checkpoints/sup1k_vitbase16_pretrain.pth', map_location='cpu')
+    state_dict = model.state_dict()
+    state_dict.update(ckpt)
+    model.load_state_dict(state_dict)
+    return model
+
+# add mocov3
 @register_model
 def vit_base_patch16_224_mocov3(pretrained=False, **kwargs):
     """ ViT-Base model (ViT-B/16) from original paper (https://arxiv.org/abs/2010.11929).
