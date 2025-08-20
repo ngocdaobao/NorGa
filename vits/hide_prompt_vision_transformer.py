@@ -970,7 +970,7 @@ def vit_base_patch16_224(pretrained=False, **kwargs):
     print('BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB')
     print(pretrained)
     model_kwargs = dict(patch_size=16, embed_dim=768, depth=12, num_heads=12, **kwargs)
-    model = _create_vision_transformer('vit_base_patch16_224.augreg2_in21k_ft_in1k', pretrained=pretrained, **model_kwargs)
+    model = _create_vision_transformer('vit_base_patch16_224', pretrained=pretrained, **model_kwargs)
     return model
 
 
