@@ -120,13 +120,17 @@ class EPrompt(nn.Module):
                         batched_prompt_raw = (1-prompt_momentum) * self.prompt[:, :, idx] + prompt_momentum * batched_prompt_momentum
                     self.prompt[:, :, idx].copy_(batched_prompt_raw)
                     # batched_prompt_raw = self.prompt[:, :, idx]
-                    num_layers, dual, batch_size, top_k, length, num_heads, heads_embed_dim = batched_prompt_raw.shape
+                    batched_prompt_raw = batched_prompt_raw.permute(0, 2, 1, 3, 4, 5, 6)
+
+                    num_layers, batch_size, dual, top_k, length, num_heads, heads_embed_dim = batched_prompt_raw.shape
                     batched_prompt = batched_prompt_raw.reshape(
                         num_layers, batch_size, dual, top_k * length, num_heads, heads_embed_dim
                     )
                 else:
                     batched_prompt_raw = self.prompt[:, :, idx]  # num_layers, B, top_k, length, C
-                    num_layers, dual, batch_size, top_k, length, num_heads, heads_embed_dim = batched_prompt_raw.shape
+                    batched_prompt_raw = batched_prompt_raw.permute(0, 2, 1, 3, 4, 5, 6)
+
+                    num_layers, batch_size, dual, top_k, length, num_heads, heads_embed_dim = batched_prompt_raw.shape
                     batched_prompt = batched_prompt_raw.reshape(
                         num_layers, batch_size, dual, top_k * length, num_heads, heads_embed_dim
                     )
